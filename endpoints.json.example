@@ -1,0 +1,24 @@
+[
+  {
+    "system_id": 2,
+    "level": [
+      "federal"
+    ],
+    "supplier_name": "Secretaría de la Función Pública",
+    "url": "",
+    "token_url": "",
+    "username": "",
+    "password": ""
+  },
+  {
+    "system_id": 2,
+    "level": [
+      "estatal"
+    ],
+    "supplier_name": "Sistema Estatal Anticorrupción del Estado de Fuebla",
+    "url": "",
+    "token_url": "",
+    "username": "",
+    "password": ""
+  }
+]
