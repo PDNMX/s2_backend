@@ -1,6 +1,7 @@
 [
   {
     "system_id": 2,
+    "type": "REST",
     "level": [
       "federal"
     ],
@@ -12,6 +13,7 @@
   },
   {
     "system_id": 2,
+    "type": "REST",
     "level": [
       "estatal"
     ],
