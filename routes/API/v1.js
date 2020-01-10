@@ -15,40 +15,54 @@ router.get('/', function(req, res, next) {
 router.post('/search', (req, res)=> {
     const {body} = req;
 
-    console.log(endpoints);
-
-
-    fetchData(endpoints[0]);
-
     //Evalua la consulta
-
     //Consulta fuentes
+
+    console.log(endpoints);
+    fetchData(endpoints[0]);
 
     res.json({})
 });
 
+// entidades de uno o más proveedores de información
 router.post('/entities', (req, res) => {
 
     let promises = endpoints.map( endpoint => fetchEntities(endpoint) );
 
     Promise.all(promises).then( data => {
         console.log(data);
-        res.json({})
+        res.json(data)
+    }).catch(error => {
+        console.log(error);
     });
 
 });
 
 
 const fetchData = endpoint => {
-    getToken(endpoint).then(data => {
-       console.log(data.access_token);
+    getToken(endpoint).then(token_data => {
+        console.log(token_data.access_token);
     });
 };
 
 const fetchEntities = endpoint => {
-  return getToken(endpoint).then(data => {
-      return data;
-  })
+    return getToken(endpoint).then(token_data => {
+        const {access_token} = token_data;
+        const opts = {
+            uri: endpoint.entities_url,
+            method: 'GET',
+            qs: {
+                access_token: access_token,
+            },
+            headers: {
+                Authorization: 'Bearer ' + access_token
+            },
+            json: true
+        };
+        //console.log(opts);
+
+        return rp(opts).then( entities => entities);
+    });
 };
 
 const getToken = endpoint => {
@@ -68,6 +82,5 @@ const getToken = endpoint => {
 
     return rp(opts);
 };
-
 
 module.exports = router;
