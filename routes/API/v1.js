@@ -19,9 +19,14 @@ router.post('/search', (req, res)=> {
     //Consulta fuentes
 
     console.log(endpoints);
-    fetchData(endpoints[0]);
+    let queries = endpoints.map( endpoint => fetchData(endpoint,{}));
 
-    res.json({})
+    Promise.all(queries).then( data => {
+        console.log(data);
+        res.json(data);
+    }).catch(error => {
+        console.log(error);
+    });
 });
 
 // entidades de uno o más proveedores de información
@@ -30,7 +35,7 @@ router.post('/entities', (req, res) => {
     let promises = endpoints.map( endpoint => fetchEntities(endpoint) );
 
     Promise.all(promises).then( data => {
-        console.log(data);
+        //console.log(data);
         res.json(data)
     }).catch(error => {
         console.log(error);
@@ -39,9 +44,23 @@ router.post('/entities', (req, res) => {
 });
 
 
-const fetchData = endpoint => {
-    getToken(endpoint).then(token_data => {
-        console.log(token_data.access_token);
+const fetchData = (endpoint, options) => {
+    return getToken(endpoint).then(token_data => {
+        const {access_token} = token_data;
+
+        let opts = {
+            uri: endpoint.url,
+            method: 'POST',
+            qs: {
+                access_token: access_token
+            },
+            body: options,
+            json: true
+        };
+
+        //console.log(opts);
+
+        return rp(opts).then( data => data);
     });
 };
 
@@ -53,9 +72,6 @@ const fetchEntities = endpoint => {
             method: 'GET',
             qs: {
                 access_token: access_token,
-            },
-            headers: {
-                Authorization: 'Bearer ' + access_token
             },
             json: true
         };
