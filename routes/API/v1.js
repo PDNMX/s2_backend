@@ -17,9 +17,8 @@ router.post('/search', (req, res)=> {
 
     console.log(endpoints);
 
-    getToken(endpoints[0]).then(data => {
-console.log(data.access_token)
-    });
+
+    fetchData(endpoints[0]);
 
     //Evalua la consulta
 
@@ -28,6 +27,29 @@ console.log(data.access_token)
     res.json({})
 });
 
+router.post('/entities', (req, res) => {
+
+    let promises = endpoints.map( endpoint => fetchEntities(endpoint) );
+
+    Promise.all(promises).then( data => {
+        console.log(data);
+        res.json({})
+    });
+
+});
+
+
+const fetchData = endpoint => {
+    getToken(endpoint).then(data => {
+       console.log(data.access_token);
+    });
+};
+
+const fetchEntities = endpoint => {
+  return getToken(endpoint).then(data => {
+      return data;
+  })
+};
 
 const getToken = endpoint => {
     const opts = {
