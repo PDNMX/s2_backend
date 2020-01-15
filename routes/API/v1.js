@@ -1,5 +1,8 @@
 var express = require('express');
+var cors = require ('cors');
+
 var router = express.Router();
+router.use(cors());
 
 const endpoints = require('../../endpoints');
 const {fetchData, fetchEntities} = require('./rest_data');
@@ -29,7 +32,9 @@ router.post('/summary', (req, res)=> {
     console.log(endpoints);
     let queries = endpoints.map( endpoint => fetchData(endpoint,{
         //query options
-        pageSize: 1
+        pageSize: 1,
+        page: 1,
+        query: {}
     }));
 
     Promise.all(queries).then( data => {
@@ -44,21 +49,50 @@ router.post('/summary', (req, res)=> {
 router.post('/search', (req, res) => {
 
     const {
+        page,
+        pageSize,
         supplier_id,
         nombres,
-        apellido_uno,
-        apellido_dos,
-        procedimiento,
-        institucion,
-        nivel_gobierno
+        primerApellido,
+        segundoApellido,
+        tipoProcedimiento,
+        institucionDependencia
     } =  req.body;
 
     let endpoint = endpoints.filter(d => d.supplier_id === supplier_id);
     endpoint = endpoint[0];
 
     //buscar...
+    let options = {
+        query: {}
+    };
 
-    res.json({});
+    options.page = page;
+    options.pageSize = pageSize;
+
+    if (typeof nombres !== 'undefined' && nombres !== ''){
+        options.query.nombres = nombres;
+    }
+
+    if (typeof primerApellido !== 'undefined' && primerApellido !== ''){
+        options.query.primerApellido = primerApellido;
+    }
+
+    if (typeof primerApellido !== 'undefined' && primerApellido !== ''){
+        options.query.segundoApellido = segundoApellido;
+    }
+
+    if (typeof tipoProcedimiento !== 'undefined'){
+        options.query.tipoProcedimiento = tipoProcedimiento;
+    }
+
+    if (typeof institucionDependencia !== 'undefined' && institucionDependencia !== ''){
+        options.query.institucionDependencia = institucionDependencia;
+    }
+
+    fetchData(endpoint, options).then(data => {
+        res.json(data);
+    });
 
 });
 
