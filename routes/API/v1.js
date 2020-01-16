@@ -112,7 +112,7 @@ router.post('/entities', (req, res) => {
         if (endpoint.type === 'REST') {
             return fetchEntities(endpoint);
 
-        }else if (endpoint.type === 'GRAPHQL'){
+        } else if (endpoint.type === 'GRAPHQL'){
             return graphql_data.fetchEntities(endpoint)
         }
 
@@ -145,16 +145,5 @@ router.post('/entities', (req, res) => {
     });
 
 });
-
-/*
-router.get('/graphql_test', (req, res) => {
-    graphql_data.prueba().then(data => {
-           console.log(data);
-           res.json(data);
-    }).catch(error => {
-        console.log(error)
-    })
-});*/
-
 
 module.exports = router;
