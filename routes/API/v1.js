@@ -107,7 +107,15 @@ router.post('/entities', (req, res) => {
 
     const {nivel_gobierno} = req.body;
 
-    let promises = endpoints.map( endpoint => {
+    let endpoints_ = [];
+
+    if (typeof nivel_gobierno !== 'undefined') {
+        endpoints_ = endpoints.filter(e => e.levels.includes(nivel_gobierno));
+    } else {
+      endpoints_ = endpoints;  
+    }
+
+    let promises = endpoints_.map( endpoint => {
         //console.log(endpoint.type);
         if (endpoint.type === 'REST') {
             return fetchEntities(endpoint);
