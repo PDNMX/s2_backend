@@ -6,6 +6,8 @@ router.use(cors());
 
 const endpoints = require('../../endpoints');
 const {fetchData, fetchEntities} = require('./rest_data');
+const graphql_data = require('./graphql_data');
+
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -105,7 +107,16 @@ router.post('/entities', (req, res) => {
 
     const {nivel_gobierno} = req.body;
 
-    let promises = endpoints.map( endpoint => fetchEntities(endpoint) );
+    let promises = endpoints.map( endpoint => {
+        //console.log(endpoint.type);
+        if (endpoint.type === 'REST') {
+            return fetchEntities(endpoint);
+
+        }else if (endpoint.type === 'GRAPHQL'){
+            return graphql_data.fetchEntities(endpoint)
+        }
+
+    });
 
     Promise.all(promises).then( data => {
         // asignar supplier
@@ -123,8 +134,8 @@ router.post('/entities', (req, res) => {
         }
 
         const cfn = (a, b) => {
-            if(a.siglas < b.siglas) { return -1; }
-            if(a.siglas > b.siglas) { return 1; }
+            if(a.nombre < b.nombre) { return -1; }
+            if(a.nombre > b.nombre) { return 1; }
             return 0;
         };
 
@@ -134,5 +145,16 @@ router.post('/entities', (req, res) => {
     });
 
 });
+
+/*
+router.get('/graphql_test', (req, res) => {
+    graphql_data.prueba().then(data => {
+           console.log(data);
+           res.json(data);
+    }).catch(error => {
+        console.log(error)
+    })
+});*/
+
 
 module.exports = router;
