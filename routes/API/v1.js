@@ -17,12 +17,67 @@ router.get('/', function(req, res, next) {
     });
 });
 
-// busqueda general
+router.post('/entities', (req, res) => {
+    // entidades de uno o más proveedores de información
+    // las entidades debería traer:
+    // nivel de gobierno
+    // supplier_id
+
+    // un proveedor de información podría traer de varios niveles
+    const {nivel_gobierno} = req.body;
+
+    let endpoints_ = [];
+
+    if (typeof nivel_gobierno !== 'undefined') {
+        endpoints_ = endpoints.filter(e => e.levels.includes(nivel_gobierno));
+    } else {
+        endpoints_ = endpoints;
+    }
+
+    let promises = endpoints_.map( endpoint => {
+        //console.log(endpoint.type);
+        if (endpoint.type === 'REST') {
+            return fetchEntities(endpoint);
+
+        } else if (endpoint.type === 'GRAPHQL'){
+            return graphql_data.fetchEntities(endpoint)
+        }
+
+    });
+
+    Promise.all(promises).then( data => {
+        // asignar supplier
+        let entities = [];
+        const dl = data.length;
+
+        for (let i=0; i < dl; i++){
+            entities = entities.concat(data[i].map(entity => {
+                entity.supplier_id = i;
+                return entity;
+            }));
+        }
+
+        const cfn = (a, b) => {
+            if(a.nombre < b.nombre) { return -1; }
+            if(a.nombre > b.nombre) { return 1; }
+            return 0;
+        };
+
+        res.json(entities.sort(cfn));
+    }).catch(error => {
+        console.log(error);
+    });
+
+});
+
+
 router.post('/summary', (req, res)=> {
+    // búsqueda general
+
     const {
         nombres,
-        apellido_uno,
-        apellido_dos,
+        primerApellido,
+        segundoApellido,
         procedimiento,
         institucion,
         nivel_gobierno
@@ -94,62 +149,6 @@ router.post('/search', (req, res) => {
 
     fetchData(endpoint, options).then(data => {
         res.json(data);
-    });
-
-});
-
-// entidades de uno o más proveedores de información
-// las entidades debería traer:
-// nivel de gobierno
-// supplier_id
-
-router.post('/entities', (req, res) => {
-
-    const {nivel_gobierno} = req.body;
-
-    let endpoints_ = [];
-
-    if (typeof nivel_gobierno !== 'undefined') {
-        endpoints_ = endpoints.filter(e => e.levels.includes(nivel_gobierno));
-    } else {
-      endpoints_ = endpoints;
-    }
-
-    let promises = endpoints_.map( endpoint => {
-        //console.log(endpoint.type);
-        if (endpoint.type === 'REST') {
-            return fetchEntities(endpoint);
-
-        } else if (endpoint.type === 'GRAPHQL'){
-            return graphql_data.fetchEntities(endpoint)
-        }
-
-    });
-
-    Promise.all(promises).then( data => {
-        // asignar supplier
-        let entities = [];
-        const dl = data.length;
-
-        // falta filtrar si el entity corresponde al nivel de gobierno;
-        // un proveedor de información puede traer de varios niveles
-
-        for (let i=0; i < dl; i++){
-            entities = entities.concat(data[i].map(entity => {
-                entity.supplier_id = i;
-                return entity;
-            }));
-        }
-
-        const cfn = (a, b) => {
-            if(a.nombre < b.nombre) { return -1; }
-            if(a.nombre > b.nombre) { return 1; }
-            return 0;
-        };
-
-        res.json(entities.sort(cfn));
-    }).catch(error => {
-        console.log(error);
     });
 
 });
