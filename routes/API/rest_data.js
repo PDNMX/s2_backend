@@ -1,5 +1,22 @@
 const rp = require('request-promise');
 
+const fetchEntities = endpoint => {
+    return getToken(endpoint).then(token_data => {
+        const {access_token} = token_data;
+        const opts = {
+            uri: endpoint.entities_url,
+            method: 'GET',
+            qs: {
+                access_token: access_token,
+            },
+            json: true
+        };
+        //console.log(opts);
+
+        return rp(opts).then( entities => entities);
+    });
+};
+
 const fetchData = (endpoint, options) => {
     return getToken(endpoint).then(token_data => {
         const {access_token} = token_data;
@@ -20,22 +37,6 @@ const fetchData = (endpoint, options) => {
     });
 };
 
-const fetchEntities = endpoint => {
-    return getToken(endpoint).then(token_data => {
-        const {access_token} = token_data;
-        const opts = {
-            uri: endpoint.entities_url,
-            method: 'GET',
-            qs: {
-                access_token: access_token,
-            },
-            json: true
-        };
-        //console.log(opts);
-
-        return rp(opts).then( entities => entities);
-    });
-};
 
 const getToken = endpoint => {
     const opts = {

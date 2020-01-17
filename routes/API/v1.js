@@ -112,7 +112,7 @@ router.post('/entities', (req, res) => {
     if (typeof nivel_gobierno !== 'undefined') {
         endpoints_ = endpoints.filter(e => e.levels.includes(nivel_gobierno));
     } else {
-      endpoints_ = endpoints;  
+      endpoints_ = endpoints;
     }
 
     let promises = endpoints_.map( endpoint => {
@@ -152,6 +152,13 @@ router.post('/entities', (req, res) => {
         console.log(error);
     });
 
+});
+
+router.get('/test', (req, res) => {
+   graphql_data.fetchData(endpoints[1], {page: 1 , pageSize: 10, query: {}}).then(data => {
+      console.log(data);
+      res.json(data);
+   });
 });
 
 module.exports = router;
