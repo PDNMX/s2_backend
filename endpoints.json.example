@@ -1,11 +1,12 @@
 [
   {
+    "supplier_id": "SFP",
+    "supplier_name": "Secretaría de la Función Pública",
     "system_id": 2,
     "type": "REST",
     "level": [
       "federal"
     ],
-    "supplier_name": "Secretaría de la Función Pública",
     "url": "",
     "entities_url": "",
     "token_url": "",
@@ -15,12 +16,13 @@
     "client_secret": ""
   },
   {
+    "supplier_id": "EDOPUE",
+    "supplier_name": "Sistema Estatal Anticorrupción del Estado de Puebla",
     "system_id": 2,
     "type": "REST",
     "level": [
       "estatal"
     ],
-    "supplier_name": "Sistema Estatal Anticorrupción del Estado de Fuebla",
     "url": "",
     "entities_url": "",
     "token_url": "",

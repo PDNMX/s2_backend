@@ -116,7 +116,12 @@ fetchData = (endpoint, options) => {
     return rp(opts).then( data => {
         return new Promise ((resolve, reject) => {
             try {
-                const d = JSON.parse(data);
+                let d = JSON.parse(data);
+                d.data.supplier_name = endpoint.supplier_name;
+                d.data.supplier_id = endpoint.supplier_id;
+                d.data.niveles = endpoint.levels;
+                d.data.pagination = {};
+                d.data.pagination.totalRows = d.data.servidor_publico.totalCount;
                 resolve(d.data);
             }
             catch(e){
