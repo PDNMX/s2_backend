@@ -134,8 +134,7 @@ router.post('/search', (req, res) => {
         pageSize
     } =  body;
 
-    let endpoint = endpoints.filter(d => d.supplier_id === supplier_id);
-    endpoint = endpoint[0];
+    let endpoint = endpoints.find(d => d.supplier_id === supplier_id);
 
     let options = {
         query: {
@@ -160,9 +159,15 @@ router.post('/search', (req, res) => {
         }
     }
 
-    fetchData(endpoint, options).then(data => {
-        res.json(data);
-    });
+    if (endpoint.type === 'REST') {
+        rest_data.fetchData(endpoint, options).then(data => {
+            res.json(data);
+        });
+    } else if (endpoint.type === 'GRAPHQL'){
+        graphql_data.fetchData(endpoint, options).then(data => {
+            res.json(data);
+        });
+    }
 
 });
 
