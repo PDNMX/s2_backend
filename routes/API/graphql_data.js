@@ -106,7 +106,7 @@ fetchData = (endpoint, options) => {
             variables: {
                 first: pageSize,
                 start : (pageSize * page),
-                filtros: {}
+                filtros: query
             },
         })
     };
@@ -118,6 +118,7 @@ fetchData = (endpoint, options) => {
                 d.data.supplier_name = endpoint.supplier_name;
                 d.data.supplier_id = endpoint.supplier_id;
                 d.data.levels = endpoint.levels;
+                d.data.endpoint_type = endpoint.type;
                 d.data.pagination = {};
                 d.data.pagination.totalRows = d.data.servidor_publico.totalCount;
                 resolve(d.data);

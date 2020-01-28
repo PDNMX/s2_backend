@@ -128,16 +128,13 @@ router.post('/search', (req, res) => {
 
     const { body } = req;
     const { supplier_id } = body;
-
-    console.log('supplier_id -> ', supplier_id);
-
     let {
         page,
         pageSize
     } =  body;
 
     if (typeof page === 'undefined' || page === null || isNaN(page)){
-        page = 0;
+        page = 1;
     }
 
     if (typeof pageSize === 'undefined' || pageSize === null || isNaN(pageSize)){
@@ -149,10 +146,9 @@ router.post('/search', (req, res) => {
     console.log(endpoint);
 
     let options = {
-        query: {
-            page,
-            pageSize
-        }
+        page,
+        pageSize,
+        query: {}
     };
 
     const params = [
@@ -161,8 +157,6 @@ router.post('/search', (req, res) => {
         'segundoApellido',
         'procedimiento',
         'institucion',
-        'page',
-        'pageSize'
     ];
 
     for (const k of params){
@@ -170,6 +164,8 @@ router.post('/search', (req, res) => {
             options.query[k] = body[k];
         }
     }
+
+    console.log(options);
 
     if (endpoint.type === 'REST') {
         rest_data.fetchData(endpoint, options).then(data => {
@@ -183,11 +179,13 @@ router.post('/search', (req, res) => {
 
 });
 
+/*
 router.get('/test', (req, res) => {
    graphql_data.fetchData(endpoints[1], {page: 1 , pageSize: 10, query: {}}).then(data => {
       console.log(data);
       res.json(data);
    });
 });
+*/
 
 module.exports = router;
