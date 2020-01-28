@@ -44,8 +44,6 @@ fetchData = (endpoint, options) => {
 
     const {pageSize, page, query} = options;
 
-
-
     const gql_query = `
     query test($filtros: Filtros, $first: Int, $start: Int, $sort: Sort) {
               servidor_publico(filtros: $filtros, first: $first, start: $start, sort: $sort){
@@ -108,7 +106,7 @@ fetchData = (endpoint, options) => {
             variables: {
                 first: pageSize,
                 start : (pageSize * page),
-                filtros: query
+                filtros: {}
             },
         })
     };

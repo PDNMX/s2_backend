@@ -127,14 +127,26 @@ router.post('/summary', (req, res)=> {
 router.post('/search', (req, res) => {
 
     const { body } = req;
+    const { supplier_id } = body;
 
-    const {
-        supplier_id,
+    console.log('supplier_id -> ', supplier_id);
+
+    let {
         page,
         pageSize
     } =  body;
 
+    if (typeof page === 'undefined' || page === null || isNaN(page)){
+        page = 0;
+    }
+
+    if (typeof pageSize === 'undefined' || pageSize === null || isNaN(pageSize)){
+        pageSize = 10;
+    }
+
     let endpoint = endpoints.find(d => d.supplier_id === supplier_id);
+
+    console.log(endpoint);
 
     let options = {
         query: {
@@ -148,7 +160,7 @@ router.post('/search', (req, res) => {
         'primerApellido',
         'segundoApellido',
         'procedimiento',
-        'institucion', // ??
+        'institucion',
         'page',
         'pageSize'
     ];
