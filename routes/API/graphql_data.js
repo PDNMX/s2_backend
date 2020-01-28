@@ -119,7 +119,7 @@ fetchData = (endpoint, options) => {
                 let d = JSON.parse(data);
                 d.data.supplier_name = endpoint.supplier_name;
                 d.data.supplier_id = endpoint.supplier_id;
-                d.data.niveles = endpoint.levels;
+                d.data.levels = endpoint.levels;
                 d.data.pagination = {};
                 d.data.pagination.totalRows = d.data.servidor_publico.totalCount;
                 resolve(d.data);

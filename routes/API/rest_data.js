@@ -36,7 +36,7 @@ const fetchData = (endpoint, options) => {
         return rp(opts).then( data => {
             data.supplier_name = endpoint.supplier_name;
             data.supplier_id = endpoint.supplier_id;
-            data.niveles = endpoint.levels;
+            data.levels = endpoint.levels;
             return data;
         });
     });

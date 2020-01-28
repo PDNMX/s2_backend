@@ -8,7 +8,6 @@ const endpoints = require('../../endpoints');
 const rest_data = require('./rest_data');
 const graphql_data = require('./graphql_data');
 
-
 /* GET home page. */
 router.get('/', function(req, res, next) {
     res.json({
@@ -110,8 +109,14 @@ router.post('/summary', (req, res)=> {
     });
 
     Promise.all(queries).then( data => {
-        console.log(data);
-        let summary = data.map (d => ({niveles: d.niveles, totalRows: d.pagination.totalRows, supplier_name: d.supplier_name}));
+        //console.log(data);
+        let summary = data.map (d => ({
+            supplier_id: d.supplier_id,
+            supplier_name: d.supplier_name,
+            levels: d.levels,
+            totalRows: d.pagination.totalRows
+        }));
+
         res.json(summary);
     }).catch(error => {
         console.log(error);
