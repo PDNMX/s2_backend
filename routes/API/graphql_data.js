@@ -40,7 +40,7 @@ const fetchEntities = endpoint => {
     });
 };
 
-fetchData = (endpoint, options) => {
+const fetchData = (endpoint, options) => {
 
     const {pageSize, page, query} = options;
 
@@ -106,7 +106,7 @@ fetchData = (endpoint, options) => {
             variables: {
                 first: pageSize,
                 start : (pageSize * page),
-                filtros: query
+                filtros: query // checar
             },
         })
     };

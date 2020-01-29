@@ -27,7 +27,7 @@ router.post('/entities', (req, res) => {
 
     let endpoints_ = [];
 
-    if (typeof nivel_gobierno !== 'undefined' && nivel_gobierno !== '' && nivel_gobierno !== null) {
+    if (typeof nivel_gobierno !== 'undefined' && nivel_gobierno !== null && nivel_gobierno !== '') {
         endpoints_ = endpoints.filter(e => e.levels.includes(nivel_gobierno));
     } else {
         endpoints_ = endpoints;
@@ -74,6 +74,7 @@ router.post('/summary', (req, res)=> {
     // búsqueda general
 
     const { body } =  req;
+    const { nivel_gobierno } = body;
 
     let options = {
         page: 1,
@@ -96,11 +97,19 @@ router.post('/summary', (req, res)=> {
     }
 
     console.log(options);
-    console.log(endpoints);
 
     //si seleccionó nivel, filtrar endpoints
+    let endpoints_ = [];
 
-    let queries = endpoints.map( endpoint => {
+    if (typeof nivel_gobierno !== 'undefined'&& nivel_gobierno !== null && nivel_gobierno !== ''){
+        endpoints_ = endpoints.filter(e => e.levels.includes(nivel_gobierno));
+    } else {
+        endpoints_ = endpoints;
+    }
+
+    console.log(endpoints_);
+
+    let queries = endpoints_.map( endpoint => {
         if (endpoint.type === 'REST'){
             return rest_data.fetchData(endpoint, options);
         } else if (endpoint.type === 'GRAPHQL'){
@@ -119,6 +128,7 @@ router.post('/summary', (req, res)=> {
 
         res.json(summary);
     }).catch(error => {
+        res.json(error);
         console.log(error);
     });
 });
