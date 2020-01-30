@@ -111,25 +111,31 @@ router.post('/summary', (req, res)=> {
 
     let queries = endpoints_.map( endpoint => {
         if (endpoint.type === 'REST'){
-            return rest_data.fetchData(endpoint, options);
+            return rest_data.fetchData(endpoint, options).catch( error => null);
         } else if (endpoint.type === 'GRAPHQL'){
-            return graphql_data.fetchData(endpoint, options);
+            return graphql_data.fetchData(endpoint, options).catch( error => null);
         }
     });
 
     Promise.all(queries).then( data => {
         //console.log(data);
-        let summary = data.map (d => ({
-            supplier_id: d.supplier_id,
-            supplier_name: d.supplier_name,
-            levels: d.levels,
-            totalRows: d.pagination.totalRows
-        }));
+        let summary = data.map (d => {
+            if (d !== null){
+                return {
+                    supplier_id: d.supplier_id,
+                    supplier_name: d.supplier_name,
+                    levels: d.levels,
+                    totalRows: d.pagination.totalRows
+                }
+            } else {
+                return {};
+            }
+        });
 
         res.json(summary);
     }).catch(error => {
-        res.json(error);
         console.log(error);
+        res.json(error);
     });
 });
 
