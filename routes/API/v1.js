@@ -7,6 +7,7 @@ router.use(cors());
 const endpoints = require('../../endpoints');
 const rest_data = require('./rest_data');
 const graphql_data = require('./graphql_data');
+const dt = require('./data_transformation');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -198,7 +199,7 @@ router.post('/search', (req, res) => {
         });
     } else if (endpoint.type === 'GRAPHQL'){
         graphql_data.fetchData(endpoint, options).then(data => {
-            res.json(data);
+            res.json(dt.sfp(data));
         });
     }
 
