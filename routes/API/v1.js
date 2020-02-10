@@ -145,7 +145,9 @@ router.post('/summary', (req, res)=> {
         res.json(summary);
     }).catch(error => {
         console.log(error);
-        res.json(error);
+        res.status(500).json({
+            error: "Algo salio mal..."
+        });
     });
 });
 
@@ -196,22 +198,23 @@ router.post('/search', (req, res) => {
     if (endpoint.type === 'REST') {
         rest_data.fetchData(endpoint, options).then(data => {
             res.json(data);
+        }).catch( e => {
+            console.log(e);
+            res.status(500).json({
+                error: "Algo salio mal..."
+            });
         });
     } else if (endpoint.type === 'GRAPHQL'){
         graphql_data.fetchData(endpoint, options).then(data => {
             res.json(dt.sfp(data));
+        }).catch( e => {
+            console.log(e);
+            res.status(500).json({
+                error: "Algo salio mal"
+            });
         });
     }
 
 });
-
-/*
-router.get('/test', (req, res) => {
-   graphql_data.fetchData(endpoints[1], {page: 1 , pageSize: 10, query: {}}).then(data => {
-      console.log(data);
-      res.json(data);
-   });
-});
-*/
 
 module.exports = router;

@@ -114,14 +114,14 @@ const fetchData = (endpoint, options) => {
     return rp(opts).then( data => {
         return new Promise ((resolve, reject) => {
             try {
-                let d = JSON.parse(data);
-                d.data.supplier_name = endpoint.supplier_name;
-                d.data.supplier_id = endpoint.supplier_id;
-                d.data.levels = endpoint.levels;
-                d.data.endpoint_type = endpoint.type;
-                d.data.pagination = {};
-                d.data.pagination.totalRows = d.data.servidor_publico.totalCount;
-                resolve(d.data);
+                let {servidor_publico} = JSON.parse(data).data;
+                servidor_publico.supplier_name = endpoint.supplier_name;
+                servidor_publico.supplier_id = endpoint.supplier_id;
+                servidor_publico.levels = endpoint.levels;
+                servidor_publico.endpoint_type = endpoint.type;
+                servidor_publico.pagination = {};
+                servidor_publico.pagination.totalRows = servidor_publico.totalCount;
+                resolve(servidor_publico);
             }
             catch(e){
                 reject(e);

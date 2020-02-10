@@ -11,7 +11,6 @@ const fetchEntities = endpoint => {
             },
             json: true
         };
-        //console.log(opts);
 
         return rp(opts).then( entities => entities);
     });
@@ -31,8 +30,6 @@ const fetchData = (endpoint, options) => {
             json: true
         };
 
-        //console.log(opts);
-
         console.log(opts.body);
         return rp(opts).then( data => {
             data.supplier_name = endpoint.supplier_name;
@@ -43,7 +40,6 @@ const fetchData = (endpoint, options) => {
         });
     });
 };
-
 
 const getToken = endpoint => {
     const opts = {
