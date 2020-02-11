@@ -4,8 +4,6 @@ const sfp = data => {
     return _data;
 };
 
-
-
 module.exports = {
     sfp
 };

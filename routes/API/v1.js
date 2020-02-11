@@ -115,13 +115,17 @@ router.post('/summary', (req, res)=> {
             return rest_data.fetchData(endpoint, options).catch( error => ({
                 supplier_id: endpoint.supplier_id,
                 supplier_name: endpoint.supplier_name,
-                error: "Algo salió mal."
+                levels: endpoint.levels,
+                error: "Algo salió mal.",
+                totalRows: 0
             }) );
         } else if (endpoint.type === 'GRAPHQL'){
             return graphql_data.fetchData(endpoint, options).catch( error => ({
                 supplier_id: endpoint.supplier_id,
                 supplier_name: endpoint.supplier_name,
-                error: "Algo salió mal."
+                levels: endpoint.levels,
+                error: "Algo salió mal.",
+                totalRows: 0
             }));
         }
     });
