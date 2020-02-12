@@ -105,7 +105,7 @@ const fetchData = (endpoint, options) => {
             query: gql_query,
             variables: {
                 first: pageSize,
-                start : (pageSize * page),
+                start : page === 1? page : ( pageSize * (page - 1) ) + 1, // inicia en 1
                 filtros: query // checar
             },
         })
