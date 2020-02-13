@@ -31,7 +31,11 @@ const fetchEntities = endpoint => {
         return new Promise ((resolve, reject) => {
             try {
                 const d = JSON.parse(data);
-                resolve(d.data.dependencias.results);
+                const entities = d.data.dependencias.results.map(e => {
+                    e.supplier_id = endpoint.supplier_id;
+                    return e;
+                });
+                resolve(entities);
             }
             catch(e){
                 reject(e);

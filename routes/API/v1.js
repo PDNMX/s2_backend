@@ -21,7 +21,6 @@ router.post('/entities', (req, res) => {
     // entidades de uno o más proveedores de información
     // las entidades debería traer:
     // nivel de gobierno
-    // supplier_id
 
     // un proveedor de información podría traer de varios niveles
     const {nivel_gobierno} = req.body;
@@ -38,7 +37,6 @@ router.post('/entities', (req, res) => {
         //console.log(endpoint.type);
         if (endpoint.type === 'REST') {
             return rest_data.fetchEntities(endpoint);
-
         } else if (endpoint.type === 'GRAPHQL'){
             return graphql_data.fetchEntities(endpoint)
         }
@@ -46,17 +44,8 @@ router.post('/entities', (req, res) => {
     });
 
     Promise.all(promises).then( data => {
-        // asignar supplier
-        let entities = [];
-        const dl = data.length;
-
-        for (let i=0; i < dl; i++){
-            entities = entities.concat(data[i].map(entity => {
-                entity.supplier_id = i;
-                return entity;
-            }));
-        }
-
+        // mezclar entities
+        let entities = data.flat(1);
         const cfn = (a, b) => {
             if(a.nombre < b.nombre) { return -1; }
             if(a.nombre > b.nombre) { return 1; }

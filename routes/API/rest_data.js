@@ -12,7 +12,12 @@ const fetchEntities = endpoint => {
             json: true
         };
 
-        return rp(opts).then( entities => entities);
+        return rp(opts).then( entities => {
+            return entities.map(e => {
+                e.supplier_id = endpoint.supplier_id;
+                return e;
+            });
+        });
     });
 };
 
