@@ -64,7 +64,7 @@ router.post('/summary', (req, res)=> {
     // búsqueda general
 
     const { body } =  req;
-    const { nivel_gobierno } = body;
+    const { nivel_gobierno, institucion } = body;
 
     let options = {
         page: 1,
@@ -76,8 +76,7 @@ router.post('/summary', (req, res)=> {
         'nombres',
         'primerApellido',
         'segundoApellido',
-        'procedimiento',
-        'institucion'
+        'procedimiento'
     ];
 
     for (let k of params){
@@ -88,10 +87,13 @@ router.post('/summary', (req, res)=> {
 
     console.log(options);
 
-    //si seleccionó nivel, filtrar endpoints
     let endpoints_ = [];
 
-    if (typeof nivel_gobierno !== 'undefined'&& nivel_gobierno !== null && nivel_gobierno !== ''){
+    if (typeof institucion !== "undefined" && typeof institucion === "object"){
+        const { nombre, supplier_id } = institucion;
+        options.query.institucionDependencia = nombre; // en SFP se llama institucion
+        endpoints_ = endpoints.filter(e => e.supplier_id === supplier_id );
+    } else if (typeof nivel_gobierno !== 'undefined'&& nivel_gobierno !== null && nivel_gobierno !== ''){
         endpoints_ = endpoints.filter(e => e.levels.includes(nivel_gobierno));
     } else {
         endpoints_ = endpoints;

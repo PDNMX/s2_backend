@@ -98,6 +98,8 @@ const fetchData = (endpoint, options) => {
             }
     `;
 
+    console.log(query)
+
     const opts = {
         uri: endpoint.url,
         method: "POST",
