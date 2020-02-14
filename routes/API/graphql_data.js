@@ -98,7 +98,12 @@ const fetchData = (endpoint, options) => {
             }
     `;
 
-    console.log(query)
+    console.log(query);
+
+    if (query.hasOwnProperty('institucionDependencia')){
+        query.institucion = query.institucionDependencia;
+        delete(query.institucionDependencia)
+    }
 
     const opts = {
         uri: endpoint.url,
