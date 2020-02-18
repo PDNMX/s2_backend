@@ -192,7 +192,7 @@ router.post('/search', (req, res) => {
 
     if (endpoint.type === 'REST') {
         rest_data.fetchData(endpoint, options).then(data => {
-            res.json(data);
+            res.json(dt.rest(data));
         }).catch( e => {
             console.log(e);
             res.status(500).json({
@@ -201,7 +201,7 @@ router.post('/search', (req, res) => {
         });
     } else if (endpoint.type === 'GRAPHQL'){
         graphql_data.fetchData(endpoint, options).then(data => {
-            res.json(dt.sfp(data));
+            res.json(dt.gql(data));
         }).catch( e => {
             console.log(e);
             res.status(500).json({
