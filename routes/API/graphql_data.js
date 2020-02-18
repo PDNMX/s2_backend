@@ -102,7 +102,33 @@ const fetchData = (endpoint, options) => {
 
     if (query.hasOwnProperty('institucionDependencia')){
         query.institucion = query.institucionDependencia;
-        delete(query.institucionDependencia)
+        delete (query.institucionDependencia);
+    }
+
+    if (query.hasOwnProperty('tipoProcedimiento')){
+
+        const proc = query.tipoProcedimiento[0];
+        let acto = "";
+
+        switch (proc) {
+            case 1:
+                acto = "CONTRATACIONES";
+                break;
+            case 2:
+                acto = "CONCESIONES";
+                break;
+            case 3:
+                acto = "ENAJENACIONES";
+                break;
+            case 4:
+                acto = "DICTAMENES";
+                break;
+            default:
+                acto = "CONTRATACIONES";
+        }
+
+        query.tipo_actos = acto;
+        delete (query.tipoProcedimiento);
     }
 
     const opts = {

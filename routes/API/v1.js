@@ -178,7 +178,7 @@ router.post('/search', (req, res) => {
         'nombres',
         'primerApellido',
         'segundoApellido',
-        'procedimiento',
+        'tipoProcedimiento',
         'institucion',
     ];
 
