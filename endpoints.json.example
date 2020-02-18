@@ -3,17 +3,11 @@
     "supplier_id": "SFP",
     "supplier_name": "Secretaría de la Función Pública",
     "system_id": 2,
-    "type": "REST",
-    "level": [
+    "type": "GRAPHQL",
+    "levels": [
       "federal"
     ],
-    "url": "",
-    "entities_url": "",
-    "token_url": "",
-    "username": "",
-    "password": "",
-    "client_id": "",
-    "client_secret": ""
+    "url": ""
   },
   {
     "supplier_id": "EDOPUE",
