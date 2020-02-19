@@ -76,7 +76,7 @@ router.post('/summary', (req, res)=> {
         'nombres',
         'primerApellido',
         'segundoApellido',
-        'procedimiento'
+        'tipoProcedimiento'
     ];
 
     for (let k of params){
