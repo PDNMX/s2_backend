@@ -36,11 +36,16 @@ router.post('/entities', (req, res) => {
     let promises = endpoints_.map( endpoint => {
         //console.log(endpoint.type);
         if (endpoint.type === 'REST') {
-            return rest_data.fetchEntities(endpoint);
+            return rest_data.fetchEntities(endpoint).catch(error => {
+                console.log(error);
+                return [];
+            });
         } else if (endpoint.type === 'GRAPHQL'){
-            return graphql_data.fetchEntities(endpoint)
+            return graphql_data.fetchEntities(endpoint).catch(error => {
+                console.log(error);
+                return [];
+            });
         }
-
     });
 
     Promise.all(promises).then( data => {
@@ -150,7 +155,7 @@ router.post('/summary', (req, res)=> {
 router.post('/search', (req, res) => {
 
     const { body } = req;
-    const { supplier_id } = body;
+    const { supplier_id, institucion } = body;
     let {
         page,
         pageSize
@@ -179,13 +184,16 @@ router.post('/search', (req, res) => {
         'primerApellido',
         'segundoApellido',
         'tipoProcedimiento',
-        'institucion',
     ];
 
     for (const k of params){
         if (body.hasOwnProperty(k) && typeof body[k] !== 'undefined' && body[k] !== null && body[k] !== '') {
             options.query[k] = body[k];
         }
+    }
+
+    if (typeof institucion !== 'undefined' && typeof institucion === 'object'){
+        options.query.institucionDependencia = institucion.nombre;
     }
 
     console.log(options);

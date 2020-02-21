@@ -1,4 +1,5 @@
 const rp = require('request-promise');
+const SFP_TIMEOUT = 7000;
 
 const fetchEntities = endpoint => {
     const query = `
@@ -17,6 +18,7 @@ const fetchEntities = endpoint => {
     const opts = {
         uri: endpoint.url,
         method: "POST",
+        timeout: SFP_TIMEOUT,
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
@@ -134,6 +136,7 @@ const fetchData = (endpoint, options) => {
     const opts = {
         uri: endpoint.url,
         method: "POST",
+        timeout: SFP_TIMEOUT,
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
