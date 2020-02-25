@@ -107,8 +107,9 @@ router.post('/summary', (req, res)=> {
     console.log(endpoints_);
 
     let queries = endpoints_.map( endpoint => {
+        let options_ = Object.assign( {}, options);
         if (endpoint.type === 'REST'){
-            return rest_data.fetchData(endpoint, options).catch( error => ({
+            return rest_data.fetchData(endpoint, options_).catch( error => ({
                 supplier_id: endpoint.supplier_id,
                 supplier_name: endpoint.supplier_name,
                 levels: endpoint.levels,
@@ -116,7 +117,7 @@ router.post('/summary', (req, res)=> {
                 totalRows: 0
             }) );
         } else if (endpoint.type === 'GRAPHQL'){
-            return graphql_data.fetchData(endpoint, options).catch( error => ({
+            return graphql_data.fetchData(endpoint, options_).catch( error => ({
                 supplier_id: endpoint.supplier_id,
                 supplier_name: endpoint.supplier_name,
                 levels: endpoint.levels,
