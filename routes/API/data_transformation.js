@@ -9,6 +9,7 @@ const renameAttr = (object, a1, a2) => {
 
 const gql = data => {
     data.results.forEach(d => {
+        renameAttr(d, 'fecha_captura', 'fechaCaptura');
         renameAttr(d, 'dependencia', 'institucionDependencia');
         renameAttr(d, 'tipo_procedimiento', 'tipoProcedimiento');
         renameAttr(d, 'nivel_responsabilidad', 'nivelResponsabilidad');

@@ -1,5 +1,7 @@
 const rp = require('request-promise');
-const SFP_TIMEOUT = 7000;
+const GQL_REQUEST_TIMEOUT = parseInt(process.env.GQL_REQUEST_TIMEOUT || 10000, 10);
+
+console.log('GQL request timeout -> ', GQL_REQUEST_TIMEOUT);
 
 const fetchEntities = endpoint => {
     const query = `
@@ -18,7 +20,7 @@ const fetchEntities = endpoint => {
     const opts = {
         uri: endpoint.url,
         method: "POST",
-        timeout: SFP_TIMEOUT,
+        timeout: GQL_REQUEST_TIMEOUT,
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
@@ -136,7 +138,7 @@ const fetchData = (endpoint, options) => {
     const opts = {
         uri: endpoint.url,
         method: "POST",
-        timeout: SFP_TIMEOUT,
+        timeout: GQL_REQUEST_TIMEOUT,
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
