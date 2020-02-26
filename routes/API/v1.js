@@ -107,7 +107,7 @@ router.post('/summary', (req, res)=> {
     console.log(endpoints_);
 
     let queries = endpoints_.map( endpoint => {
-        let options_ = Object.assign( {}, options);
+        let options_ = JSON.parse(JSON.stringify(options));
         if (endpoint.type === 'REST'){
             return rest_data.fetchData(endpoint, options_).catch( error => ({
                 supplier_id: endpoint.supplier_id,
