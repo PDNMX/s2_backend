@@ -69,7 +69,7 @@ router.post('/summary', (req, res)=> {
     // búsqueda general
 
     const { body } =  req;
-    const { nivel_gobierno, institucion } = body;
+    const { nivel_gobierno, institucion, tipoProcedimiento } = body;
 
     let options = {
         page: 1,
@@ -80,8 +80,7 @@ router.post('/summary', (req, res)=> {
     const params = [
         'nombres',
         'primerApellido',
-        'segundoApellido',
-        'tipoProcedimiento'
+        'segundoApellido'
     ];
 
     for (let k of params){
@@ -90,7 +89,9 @@ router.post('/summary', (req, res)=> {
         }
     }
 
-    console.log(options);
+    if (typeof tipoProcedimiento !== 'undefined' && Array.isArray(tipoProcedimiento) && tipoProcedimiento.length > 0){
+        options.query.tipoProcedimiento = tipoProcedimiento.map(p => p.key);
+    }
 
     let endpoints_ = [];
 
@@ -104,6 +105,7 @@ router.post('/summary', (req, res)=> {
         endpoints_ = endpoints;
     }
 
+    console.log(options);
     console.log(endpoints_);
 
     let queries = endpoints_.map( endpoint => {
@@ -156,7 +158,7 @@ router.post('/summary', (req, res)=> {
 router.post('/search', (req, res) => {
 
     const { body } = req;
-    const { supplier_id, institucion } = body;
+    const { supplier_id, institucion, tipoProcedimiento } = body;
     let {
         page,
         pageSize
@@ -183,14 +185,17 @@ router.post('/search', (req, res) => {
     const params = [
         'nombres',
         'primerApellido',
-        'segundoApellido',
-        'tipoProcedimiento',
+        'segundoApellido'
     ];
 
     for (const k of params){
         if (body.hasOwnProperty(k) && typeof body[k] !== 'undefined' && body[k] !== null && body[k] !== '') {
             options.query[k] = body[k];
         }
+    }
+
+    if (typeof tipoProcedimiento !== 'undefined' && Array.isArray(tipoProcedimiento) && tipoProcedimiento.length > 0){
+        options.query.tipoProcedimiento = tipoProcedimiento.map(p => p.key);
     }
 
     if (typeof institucion !== 'undefined' && typeof institucion === 'object'){
