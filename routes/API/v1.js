@@ -172,7 +172,21 @@ router.post('/search', (req, res) => {
         pageSize = 10;
     }
 
+    if (typeof supplier_id === 'undefined'){
+        res.status(500).json({
+            error: "Debe proporcionar un proveedor de información"
+        });
+        return;
+    }
+
     let endpoint = endpoints.find(d => d.supplier_id === supplier_id);
+
+    if (typeof endpoint === 'undefined'){
+        res.status(500).json({
+            error: "Proveedor de información no disponible"
+        });
+        return;
+    }
 
     console.log(endpoint);
 
