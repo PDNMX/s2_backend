@@ -1,4 +1,4 @@
-const rp = require('request-promise');
+const axios = require('axios');
 const GQL_REQUEST_TIMEOUT = parseInt(process.env.GQL_REQUEST_TIMEOUT || 10000, 10);
 
 console.log('GQL request timeout -> ', GQL_REQUEST_TIMEOUT);
@@ -18,24 +18,25 @@ const fetchEntities = endpoint => {
     `;
 
     const opts = {
-        uri: endpoint.url,
+        url: endpoint.url,
         method: "POST",
         timeout: GQL_REQUEST_TIMEOUT,
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
         },
-        body: JSON.stringify({
+        data: JSON.stringify({
             query: query,
             variables: {  },
         })
     };
 
-    return rp(opts).then( data => {
+    return axios(opts).then( response => {
+        let {data} = response;
+
         return new Promise ((resolve, reject) => {
             try {
-                const d = JSON.parse(data);
-                const entities = d.data.dependencias.results.map(e => {
+                const entities = data.data.dependencias.results.map(e => {
                     e.supplier_id = endpoint.supplier_id;
                     return e;
                 });
@@ -51,7 +52,6 @@ const fetchEntities = endpoint => {
 const fetchData = (endpoint, options) => {
 
     const {pageSize, page, query} = options;
-
     const gql_query = `
     query test($filtros: Filtros, $first: Int, $start: Int, $sort: Sort) {
               servidor_publico(filtros: $filtros, first: $first, start: $start, sort: $sort){
@@ -136,14 +136,14 @@ const fetchData = (endpoint, options) => {
     }
 
     const opts = {
-        uri: endpoint.url,
+        url: endpoint.url,
         method: "POST",
         timeout: GQL_REQUEST_TIMEOUT,
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
         },
-        body: JSON.stringify({
+        data: JSON.stringify({
             query: gql_query,
             variables: {
                 first: pageSize,
@@ -153,10 +153,11 @@ const fetchData = (endpoint, options) => {
         })
     };
 
-    return rp(opts).then( data => {
+    return axios(opts).then( response => {
+        const {data} = response;
         return new Promise ((resolve, reject) => {
             try {
-                let {servidor_publico} = JSON.parse(data).data;
+                let {servidor_publico} = data.data;
                 servidor_publico.supplier_name = endpoint.supplier_name;
                 servidor_publico.supplier_id = endpoint.supplier_id;
                 servidor_publico.levels = endpoint.levels;
