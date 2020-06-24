@@ -22,7 +22,7 @@ const gql = data => {
     return data;
 };
 
-
+/*
 const rest = data => {
     data.results.forEach(d => {
         d.tipoProcedimiento = procedimientos.filter(p => d.tipoProcedimiento.includes(p.clave));
@@ -30,9 +30,9 @@ const rest = data => {
     });
 
     return data;
-};
+};*/
 
 module.exports = {
     gql,
-    rest
+    //rest
 };

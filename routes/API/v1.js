@@ -220,7 +220,8 @@ router.post('/search', (req, res) => {
 
     if (endpoint.type === 'REST') {
         rest_data.fetchData(endpoint, options).then(data => {
-            res.json(dt.rest(data));
+            //res.json(dt.rest(data));
+            res.json(data);
         }).catch( e => {
             console.log(e);
             res.status(500).json({
