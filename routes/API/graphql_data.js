@@ -1,5 +1,5 @@
 const axios = require('axios');
-const GQL_REQUEST_TIMEOUT = parseInt(process.env.GQL_REQUEST_TIMEOUT || 10000, 10);
+const GQL_REQUEST_TIMEOUT = parseInt(process.env.GQL_REQUEST_TIMEOUT || 30000, 10);
 
 console.log('GQL request timeout -> ', GQL_REQUEST_TIMEOUT);
 
@@ -52,9 +52,10 @@ const fetchEntities = endpoint => {
 const fetchData = (endpoint, options) => {
 
     const {pageSize, page, query} = options;
+    // falta sort en el query => $sort: Sort
     const gql_query = `
-    query test($filtros: Filtros, $first: Int, $start: Int, $sort: Sort) {
-              servidor_publico(filtros: $filtros, first: $first, start: $start, sort: $sort){
+    query test($filtros: Filtros, $first: Int, $start: Int) {
+              servidor_publico(filtros: $filtros, first: $first, start: $start){
                 totalCount
                 pageInfo {
                   hasNextPage
@@ -146,9 +147,10 @@ const fetchData = (endpoint, options) => {
         data: JSON.stringify({
             query: gql_query,
             variables: {
+                filtros: query, // checar
                 first: pageSize,
-                start : page === 1? page : ( pageSize * (page - 1) ) + 1, // inicia en 1
-                filtros: query // checar
+                start : page === 1? page : ( pageSize * (page - 1) ) + 1 // inicia en 1
+                //sort
             },
         })
     };
