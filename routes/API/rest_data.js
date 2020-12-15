@@ -14,8 +14,11 @@ const fetchEntities = endpoint => {
         const opts = {
             url: endpoint.entities_url,
             method: 'GET',
-            params: {
+            /*params: {
                 access_token: access_token,
+            },*/
+            headers: {
+                'Authorization': 'Bearer ' + access_token
             },
             json: true
         };
@@ -68,8 +71,11 @@ const fetchData = (endpoint, options) => {
         let opts = {
             url: endpoint.url,
             method: 'post',
-            params: {
+            /*params: {
                 access_token: access_token
+            },*/
+            headers: {
+                'Authorization': 'Bearer ' + access_token
             },
             data: options,
             json: true
