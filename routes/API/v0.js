@@ -61,7 +61,7 @@ router.post('/getAgrupaciones', (req, res) => {
     client.connect();
 
     let aux = "";
-    if (req.body.filtros) {
+    if (req.body.filtros && req.body.filtros.length>0) {
         req.body.filtros.forEach((item, index) => {
             aux += (index === 0 ? item : (" and " + item))
         });
@@ -69,10 +69,9 @@ router.post('/getAgrupaciones', (req, res) => {
 
     let query = "select ejercicio, ramo,institucion, count(*) total  " +
         " from reniresp " +
-        (req.body.filtros ? (" where " + aux) : "") +
+        (req.body.filtros && req.body.filtros.length>0 ? (" where " + aux) : "") +
         " group by ejercicio,ramo,institucion "+
         " order by total desc,ejercicio,ramo,institucion";
-
     client.query(query).then(response => {
         res.status(200).json({
             "status": 200,
@@ -181,6 +180,7 @@ router.post("/getTop", (req,res) => {
         filtros.forEach((item, index) => {
             aux += (index === 0 ? item : (" and " + item))
         });
+
     }
 
     let query = "";
@@ -196,7 +196,6 @@ router.post("/getTop", (req,res) => {
             (filtros ? (" where " + aux) : "") +
             " group by " + top + " order by total desc limit 10";
     }
-
     client.connect();
 
     client.query(query).then(response => {
