@@ -64,7 +64,7 @@ const fetchData = (endpoint, options) => {
         if (typeof response.error !== 'undefined'){
             return {
                 supplier_name: endpoint.supplier_name,
-                supplier_id: endpoint.supplier_name,
+                supplier_id: endpoint.supplier_id,
                 levels: endpoint.levels,
                 error: true
             };
@@ -99,7 +99,7 @@ const fetchData = (endpoint, options) => {
             console.log(e);
             return {
                 supplier_name: endpoint.supplier_name,
-                supplier_id: endpoint.supplier_name,
+                supplier_id: endpoint.supplier_id,
                 levels: endpoint.levels,
                 error: true
             };
