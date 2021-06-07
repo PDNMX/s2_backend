@@ -62,7 +62,12 @@ const fetchData = (endpoint, options) => {
     return getToken(endpoint).then(response => {
 
         if (typeof response.error !== 'undefined'){
-            return {error: true};
+            return {
+                supplier_name: endpoint.supplier_name,
+                supplier_id: endpoint.supplier_name,
+                levels: endpoint.levels,
+                error: true
+            };
         }
 
         const {data} = response;
@@ -92,7 +97,12 @@ const fetchData = (endpoint, options) => {
             return data;
         }).catch(e => {
             console.log(e);
-            return {error: true};
+            return {
+                supplier_name: endpoint.supplier_name,
+                supplier_id: endpoint.supplier_name,
+                levels: endpoint.levels,
+                error: true
+            };
         });
     });
 };
