@@ -47,7 +47,8 @@ const getToken = endpoint => {
             username: endpoint.username,
             password: endpoint.password,
             client_id: endpoint.client_id,
-            client_secret: endpoint.client_secret
+            client_secret: endpoint.client_secret,
+            scope:  endpoint.scope
         }),
         json: true
     };
