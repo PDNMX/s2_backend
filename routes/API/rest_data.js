@@ -14,6 +14,7 @@ const fetchEntities = endpoint => {
         const opts = {
             url: endpoint.entities_url,
             method: 'GET',
+            timeout: process.env.TIMEOUT_DATA || 4000,
             /*params: {
                 access_token: access_token,
             },*/
@@ -38,6 +39,7 @@ const getToken = endpoint => {
     const opts = {
         url: endpoint.token_url,
         method: 'post',
+        timeout: process.env.TIMEOUT_TOKEN || 2000,
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
             'Authorization': "Basic " + Buffer.from(`${endpoint.client_id}:${endpoint.client_secret}`).toString('base64')
@@ -77,6 +79,7 @@ const fetchData = (endpoint, options) => {
         let opts = {
             url: endpoint.url,
             method: 'post',
+            timeout: process.env.TIMEOUT_DATA || 4000,
             /*params: {
                 access_token: access_token
             },*/
