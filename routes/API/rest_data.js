@@ -84,7 +84,8 @@ const fetchData = (endpoint, options) => {
                 access_token: access_token
             },*/
             headers: {
-                'Authorization': 'Bearer ' + access_token
+                'Authorization': 'Bearer ' + access_token,
+                'Content-Type': 'application/json'
             },
             data: options,
             json: true
