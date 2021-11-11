@@ -37,12 +37,12 @@ router.post('/entities', (req, res) => {
         //console.log(endpoint.type);
         if (endpoint.type === 'REST') {
             return rest_data.fetchEntities(endpoint).catch(error => {
-                console.log(error);
+                console.log(`entities-error= supplier_id: ${endpoint.supplier_id}  error:${error.message}`);
                 return [];
             });
         } else if (endpoint.type === 'GRAPHQL'){
             return graphql_data.fetchEntities(endpoint).catch(error => {
-                console.log(error);
+                console.log(`entities-error= supplier_id: ${endpoint.supplier_id}  error:${error.message}`);
                 return [];
             });
         }
@@ -105,8 +105,8 @@ router.post('/summary', (req, res)=> {
         endpoints_ = endpoints;
     }
 
-    console.log(options);
-    console.log(endpoints_);
+  //  console.log(options);
+   // console.log(endpoints_);
 
     let queries = endpoints_.map( endpoint => {
         let options_ = JSON.parse(JSON.stringify(options));
@@ -147,7 +147,7 @@ router.post('/summary', (req, res)=> {
 
         res.json(summary);
     }).catch(error => {
-        console.log(error);
+        console.log(`Summary-error= ${error.message}`);
         res.status(500).json({
             error: "Algo salio mal..."
         });
@@ -188,7 +188,7 @@ router.post('/search', (req, res) => {
         return;
     }
 
-    console.log(endpoint);
+  //  console.log(endpoint);
 
     let options = {
         page,
@@ -216,14 +216,14 @@ router.post('/search', (req, res) => {
         options.query.institucionDependencia = institucion.nombre;
     }
 
-    console.log(options);
+    //console.log(options);
 
     if (endpoint.type === 'REST') {
         rest_data.fetchData(endpoint, options).then(data => {
             //res.json(dt.rest(data));
             res.json(data);
         }).catch( e => {
-            console.log(e);
+            console.log(`Search-error= ${e.message}`);
             res.status(500).json({
                 error: "Algo salio mal..."
             });
@@ -232,7 +232,7 @@ router.post('/search', (req, res) => {
         graphql_data.fetchData(endpoint, options).then(data => {
             res.json(dt.gql(data));
         }).catch( e => {
-            console.log(e);
+            console.log(`Search-error= ${e.message}`);
             res.status(500).json({
                 error: "Algo salio mal"
             });

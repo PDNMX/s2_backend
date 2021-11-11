@@ -100,7 +100,7 @@ const fetchData = (endpoint, options) => {
             }
     `;
 
-    console.log(query);
+    //console.log(query);
 
     if (query.hasOwnProperty('institucionDependencia')) {
         query.institucion = query.institucionDependencia;
