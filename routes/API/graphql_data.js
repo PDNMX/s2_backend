@@ -27,25 +27,22 @@ const fetchEntities = endpoint => {
         },
         data: JSON.stringify({
             query: query,
-            variables: {  },
+            variables: {},
         })
     };
 
-    return axios(opts).then( response => {
-        let {data} = response;
+    return new Promise((resolve, reject) => {
+        return axios(opts).then(response => {
+            let {data} = response;
+            const entities = data.data.dependencias.results.map(e => {
+                e.supplier_id = endpoint.supplier_id;
+                return e;
+            });
+            resolve(entities);
+        }).catch(e => {
+            reject(e);
+        })
 
-        return new Promise ((resolve, reject) => {
-            try {
-                const entities = data.data.dependencias.results.map(e => {
-                    e.supplier_id = endpoint.supplier_id;
-                    return e;
-                });
-                resolve(entities);
-            }
-            catch(e){
-                reject(e);
-            }
-        });
     });
 };
 
@@ -105,12 +102,12 @@ const fetchData = (endpoint, options) => {
 
     console.log(query);
 
-    if (query.hasOwnProperty('institucionDependencia')){
+    if (query.hasOwnProperty('institucionDependencia')) {
         query.institucion = query.institucionDependencia;
         delete (query.institucionDependencia);
     }
 
-    if (query.hasOwnProperty('tipoProcedimiento')){
+    if (query.hasOwnProperty('tipoProcedimiento')) {
 
         const proc = query.tipoProcedimiento[0];
         let acto = "";
@@ -149,31 +146,28 @@ const fetchData = (endpoint, options) => {
             variables: {
                 filtros: query, // checar
                 first: pageSize,
-                start : page === 1? page : ( pageSize * (page - 1) ) + 1 // inicia en 1
+                start: page === 1 ? page : (pageSize * (page - 1)) + 1 // inicia en 1
                 //sort
             },
         })
     };
 
-    return axios(opts).then( response => {
-        const {data} = response;
-        return new Promise ((resolve, reject) => {
-            try {
-                let {servidor_publico} = data.data;
-                servidor_publico.supplier_name = endpoint.supplier_name;
-                servidor_publico.supplier_id = endpoint.supplier_id;
-                servidor_publico.levels = endpoint.levels;
-                servidor_publico.endpoint_type = endpoint.type;
-                servidor_publico.pagination = {};
-                servidor_publico.pagination.totalRows = servidor_publico.totalCount;
-                resolve(servidor_publico);
-            }
-            catch(e){
-                reject(e);
-            }
-        });
-    });
 
+    return new Promise((resolve, reject) => {
+        return axios(opts).then(response => {
+            const {data} = response;
+            let {servidor_publico} = data.data;
+            servidor_publico.supplier_name = endpoint.supplier_name;
+            servidor_publico.supplier_id = endpoint.supplier_id;
+            servidor_publico.levels = endpoint.levels;
+            servidor_publico.endpoint_type = endpoint.type;
+            servidor_publico.pagination = {};
+            servidor_publico.pagination.totalRows = servidor_publico.totalCount;
+            resolve(servidor_publico);
+        }).catch(e => {
+            reject(e)
+        })
+    });
 };
 
 module.exports = {
