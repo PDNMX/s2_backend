@@ -21,7 +21,7 @@ router.post('/suppliers', (req, res) =>{
     const {nivel} = req.body;
     let suppliers = JSON.parse(JSON.stringify(endpoints));
 
-    if (typeof nivel !== 'undefined' && nivel !== 'Todos' && nivel !== ''){
+    if (typeof nivel !== 'undefined' && nivel !== null && nivel !== 'Todos' && nivel !== ''){
         suppliers = suppliers.filter(s => s.levels.includes(nivel));
     }
 
