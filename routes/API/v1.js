@@ -17,6 +17,21 @@ router.get('/', function(req, res, next) {
     });
 });
 
+router.post('/suppliers', (req, res) =>{
+    const {nivel} = req.body;
+    let suppliers = JSON.parse(JSON.stringify(endpoints));
+
+    if (typeof nivel !== 'undefined' && nivel !== 'Todos' && nivel !== ''){
+        suppliers = suppliers.filter(s => s.levels.includes(nivel));
+    }
+
+    suppliers = suppliers.map(
+        s => (({ supplier_id, supplier_name, levels }) => ({ supplier_id, supplier_name, levels })) (s)
+    );
+
+    res.json(suppliers);
+});
+
 router.post('/entities', (req, res) => {
     // entidades de uno o más proveedores de información
     // las entidades debería traer:
