@@ -13,26 +13,34 @@ const connectionData = {
     password: process.env.PG_PASSWORD,
     port: process.env.PG_PORT
 };
-
+const connectionData2 = {
+    user: 'root',
+    host: 'localhost',
+    database: 'graficas',
+    password: 'root',
+    port: 5432
+};
 router.get('/getAgrupacionEjercicio', (req, res) => {
-    const client = new Client(connectionData);
-    client.connect();
-    const query = "select ejercicio, count(*) total  from reniresp group by ejercicio order by ejercicio;"
 
-    client.query(query).then(response => {
-        res.status(200).json({
-            "status": 200,
-            "data": response.rows
+        const client = new Client(connectionData);
+        client.connect();
+        const query = "select ejercicio, count(*) total  from reniresp group by ejercicio order by ejercicio;"
+
+         client.query(query).then(response => {
+            res.status(200).json({
+                "status": 200,
+                "data": response.rows
+            });
+            client.end();
+        }).catch(err => {
+            console.log("Error : ", err);
+            res.status(500).json({
+                "status": 400,
+                "mensaje": "Error al consultar BD"
+            });
+            client.end();
         });
-        client.end();
-    }).catch(err => {
-        console.log("Error : ", err);
-        res.status(500).json({
-            "status": 400,
-            "mensaje": "Error al consultar BD"
-        });
-        client.end();
-    });
+
 });
 
 router.get('/getAgrupacionPuesto', (req, res) => {
@@ -238,5 +246,70 @@ router.get('/getProcedimientosPeriodo', (req, res) => {
         client.end();
     });
 });
+
+router.get('/getTotalRows', (req, res) => {
+    const client = new Client(connectionData);
+    client.connect();
+
+    const query = "select count(*) from reniresp";
+
+    client.query(query).then(response => {
+        res.status(200).json({
+            "status": 200,
+            "data": response.rows
+        });
+        client.end();
+    }).catch(err => {
+        console.log("Error : ", err);
+        res.status(500).json({
+            "status": 400,
+            "mensaje": "Error al consultar BD"
+        });
+        client.end();
+    });
+})
+
+router.get('/getTotalInstituciones', (req, res) => {
+    const client = new Client(connectionData);
+    client.connect();
+
+    const query = "select count(*) from (select institucion from reniresp group by institucion)as instituciones";
+
+    client.query(query).then(response => {
+        res.status(200).json({
+            "status": 200,
+            "data": response.rows
+        });
+        client.end();
+    }).catch(err => {
+        console.log("Error : ", err);
+        res.status(500).json({
+            "status": 400,
+            "mensaje": "Error al consultar BD"
+        });
+        client.end();
+    });
+})
+router.get('/getTotalRamos', (req, res) => {
+    const client = new Client(connectionData);
+    client.connect();
+
+    const query = "select count(*) from (select ramo from reniresp group by ramo)as ramos";
+
+    client.query(query).then(response => {
+        res.status(200).json({
+            "status": 200,
+            "data": response.rows
+        });
+        client.end();
+    }).catch(err => {
+        console.log("Error : ", err);
+        res.status(500).json({
+            "status": 400,
+            "mensaje": "Error al consultar BD"
+        });
+        client.end();
+    });
+})
 
 module.exports = router;
