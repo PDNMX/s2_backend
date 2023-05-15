@@ -55,8 +55,8 @@ const getToken = endpoint => {
         json: true
     };
 
-    return axios(opts).catch(e => {
-        console.log(e);
+    return axios(opts).catch(e => {        
+        console.error({url:e.config.url, code: e.code, err: e.stack});
         return {error: true};
     });
 };
@@ -101,7 +101,7 @@ const fetchData = (endpoint, options) => {
             data.endpoint_type = endpoint.type;
             return data;
         }).catch(e => {
-            console.log(e);
+            console.error({url:e.config.url, code: e.code, err: e.stack});
             return {
                 supplier_name: endpoint.supplier_name,
                 supplier_id: endpoint.supplier_id,

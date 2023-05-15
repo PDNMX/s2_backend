@@ -145,22 +145,26 @@ router.post('/summary', (req, res)=> {
     });
 
     Promise.all(queries).then( data => {
-        //console.log(data);
+        // console.log(data);
         let summary = data.map (d => {
 
-            if (typeof d.error !== 'undefined'){
-                return d;
-            } else {
-                return {
-                    supplier_id: d.supplier_id,
-                    supplier_name: d.supplier_name,
-                    levels: d.levels,
-                    totalRows: d.pagination.totalRows
-                }
+            if (typeof d ==='object') {
+                if (typeof d.error !== 'undefined'){
+                    return d;
+                } else {
+                    return {
+                        supplier_id: d.supplier_id,
+                        supplier_name: d.supplier_name,
+                        levels: d.levels,
+                        totalRows: d.pagination.totalRows
+                    }
+                }    
             }
-        });
 
-        res.json(summary);
+            
+        });        
+
+        res.json(summary.filter(d=>typeof d !=='undefined' ));
     }).catch(error => {
         console.log(`Summary-error= ${error.message}`);
         res.status(500).json({
