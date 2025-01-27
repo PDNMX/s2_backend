@@ -144,31 +144,35 @@ router.post('/summary', (req, res)=> {
         }
     });
 
-    Promise.all(queries).then( data => {
-        // console.log(data);
-        let summary = data.map (d => {
-
-            if (typeof d ==='object') {
-                if (typeof d.error !== 'undefined'){
-                    return d;
-                } else {
-                    return {
-                        supplier_id: d.supplier_id,
-                        supplier_name: d.supplier_name,
-                        levels: d.levels,
-                        totalRows: d.pagination.totalRows
-                    }
-                }    
+    Promise.all(queries).then(data => {
+        let summary = data.map(d => {
+            // Primero verificamos que d sea un objeto válido
+            if (!d || typeof d !== 'object') {
+                return null;
             }
 
-            
-        });        
+            // Si hay un error, retornamos el objeto de error
+            if (d.error) {
+                return d;
+            }
 
-        res.json(summary.filter(d=>typeof d !=='undefined' ));
+            // Verificamos que pagination exista antes de acceder a totalRows
+            const totalRows = d.pagination?.totalRows || 0;
+
+            return {
+                supplier_id: d.supplier_id,
+                supplier_name: d.supplier_name,
+                levels: d.levels,
+                totalRows: totalRows
+            };
+        });
+
+        // Filtramos los valores null o undefined
+        res.json(summary.filter(Boolean));
     }).catch(error => {
         console.log(`Summary-error= ${error.message}`);
         res.status(500).json({
-            error: "Algo salio mal..."
+            error: "Algo salió mal..."
         });
     });
 });
