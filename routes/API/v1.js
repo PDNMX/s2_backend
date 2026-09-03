@@ -75,6 +75,7 @@ router.post('/entities', (req, res) => {
         res.json(entities.sort(cfn));
     }).catch(error => {
         console.log(error);
+        res.status(500).json({ error: "Algo salió mal al obtener las entidades" });
     });
 
 });

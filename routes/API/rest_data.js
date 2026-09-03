@@ -4,12 +4,12 @@ const qs = require('qs');
 const fetchEntities = endpoint => {
     return getToken(endpoint).then(response => {
 
-        if (typeof response.error !== 'undefined'){
-            return {error: true};
+        if (typeof response.error !== 'undefined') {
+            return { error: true };
         }
 
-        const {data} = response;
-        const {access_token} = data;
+        const { data } = response;
+        const { access_token } = data;
 
         const opts = {
             url: endpoint.entities_url,
@@ -24,7 +24,7 @@ const fetchEntities = endpoint => {
             json: true
         };
 
-        return axios(opts).then( response => {
+        return axios(opts).then(response => {
             const entities = response.data;
             return entities.map(e => {
                 e.supplier_id = endpoint.supplier_id;
@@ -36,35 +36,51 @@ const fetchEntities = endpoint => {
 
 const getToken = endpoint => {
 
+    const authMethod = endpoint.token_auth_method || 'header';
+
+    let headers = {
+        'Content-Type': 'application/x-www-form-urlencoded'
+    };
+
+    let data = {
+        grant_type: 'password',
+        username: endpoint.username,
+        password: endpoint.password,
+        scope: endpoint.scope
+    };
+
+    if (authMethod === 'header') {
+        headers['Authorization'] = "Basic " + Buffer.from(`${endpoint.client_id}:${endpoint.client_secret}`).toString('base64');
+    } else if (authMethod === 'body') {
+        data.client_id = endpoint.client_id;
+        data.client_secret = endpoint.client_secret;
+    }
+
     const opts = {
         url: endpoint.token_url,
         method: 'post',
         timeout: process.env.TIMEOUT_TOKEN || 2000,
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Authorization': "Basic " + Buffer.from(`${endpoint.client_id}:${endpoint.client_secret}`).toString('base64')
-        },
-        data: qs.stringify({
-            grant_type: 'password',
-            username: endpoint.username,
-            password: endpoint.password,
-            client_id: endpoint.client_id,
-            client_secret: endpoint.client_secret,
-            scope:  endpoint.scope
-        }),
+        headers: headers,
+        data: qs.stringify(data),
         json: true
     };
 
-    return axios(opts).catch(e => {        
-        console.error({url:e.config.url, code: e.code, err: e.stack});
-        return {error: true};
+    return axios(opts).catch(e => {
+        console.error({
+            url: e.config?.url,
+            code: e.code,
+            status: e.response?.status,
+            data: e.response?.data,
+            message: e.message
+        });
+        return { error: true };
     });
 };
 
 const fetchData = (endpoint, options) => {
     return getToken(endpoint).then(response => {
 
-        if (typeof response.error !== 'undefined'){
+        if (typeof response.error !== 'undefined') {
             return {
                 supplier_name: endpoint.supplier_name,
                 supplier_id: endpoint.supplier_id,
@@ -73,8 +89,11 @@ const fetchData = (endpoint, options) => {
             };
         }
 
-        const {data} = response;
-        const {access_token} = data;
+        const { data } = response;
+        const { access_token } = data;
+
+        // Nuevo log para ver exactamente qué token estamos enviando (útil para debuggear errores de JWT)
+        //console.log(`[DEBUG] Supplier: ${endpoint.supplier_id} | Token a enviar:`, access_token);
 
         let opts = {
             url: endpoint.url,
@@ -93,15 +112,21 @@ const fetchData = (endpoint, options) => {
 
         //console.log(opts);
 
-        return axios(opts).then( request => {
-            let {data} = request;
+        return axios(opts).then(request => {
+            let { data } = request;
             data.supplier_name = endpoint.supplier_name;
             data.supplier_id = endpoint.supplier_id;
             data.levels = endpoint.levels;
             data.endpoint_type = endpoint.type;
             return data;
         }).catch(e => {
-            console.error({url:e.config.url, code: e.code, err: e.stack});
+            console.error({
+                url: e.config?.url,
+                code: e.code,
+                status: e.response?.status,
+                data: e.response?.data,
+                message: e.message
+            });
             return {
                 supplier_name: endpoint.supplier_name,
                 supplier_id: endpoint.supplier_id,
